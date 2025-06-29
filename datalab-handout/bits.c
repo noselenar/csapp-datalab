@@ -323,13 +323,35 @@ int floatFloat2Int(unsigned uf) {
   unsigned sign = uf >> 31 & 1;
   unsigned exp = uf >> 23 & 0xff;
   unsigned frac = uf & 0x7fffff;
-
+  unsigned frac1 = frac | 0x800000;
   if(exp == 0xff) {
     return 0x80000000u;
   }
-  
 
-  return 2;
+  if(exp == 0x0) {
+    return 0;
+  }
+  exp -= 127;
+
+  if(exp > 31) {
+    return 0x80000000u;
+  } else if(exp < 0) {
+    return 0;
+  }
+
+  if(exp > 23) {
+    frac1 <<= exp - 23;
+  } else {
+    frac1 >>= 23 - exp;
+  }
+  
+  if(sign) {
+    return ~frac1 + 1;
+  } else {
+    return frac1;
+  }
+
+
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
