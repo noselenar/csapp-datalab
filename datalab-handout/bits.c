@@ -320,7 +320,15 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
+  unsigned sign = uf >> 31 & 1;
+  unsigned exp = uf >> 23 & 0xff;
+  unsigned frac = uf & 0x7fffff;
+
+  if(exp == 0xff) {
+    return 0x80000000u;
+  }
   
+
   return 2;
 }
 /* 
